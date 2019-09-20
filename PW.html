@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="main.js"></script>
+    <script src="classes/utils.js"></script>
+    <script src="content/blocks.js"></script>
+    <script src="content/trees.js"></script>
+    <script src="classes/simplex-noise.js"></script>
+    <script src="classes/perlin-noise.js"></script>
+    <script src="classes/camera.js"></script>
+    <script src="classes/block.js"></script>
+    <script src="classes/chunk.js"></script>
+    <script src="classes/world.js"></script>
+    <img src="textures/luminosity0.png" id="luminosity0">
+    <img src="textures/grass.png" id="grass">
+    <img src="textures/grass_bg.png" id="grass_bg">
+    <img src="textures/dirt.png" id="dirt">
+    <img src="textures/dirt_bg.png" id="dirt_bg">
+    <img src="textures/sand.png" id="sand">
+    <img src="textures/stone.png" id="stone">
+    <img src="textures/stone_bg.png" id="stone_bg">
+    <img src="textures/water.png" id="water">
+    <img src="textures/leaves.png" id="leaves">
+    <img src="textures/glowstone.png" id="glowstone">
+    <img src="textures/log.png" id="log">
+    <style>
+        html, body {
+            margin: 0px;
+            overflow: hidden;
+        }
+        img {
+            display: none;
+        }
+        #canvas {
+            position: absolute;
+            z-index: 1;
+        }
+    </style>
+    <title>PW</title>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+</html>
