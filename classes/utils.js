@@ -13,6 +13,9 @@ function InitCanvas(){
                 camera.ResizeChunkCanvas(c.chunkCanvas);
                 c.RequestUpdate();
             }
+            for (let p of playerList){
+                camera.ResizeEntityCanvas(p);
+            }
         } catch {}
     });
     
@@ -29,12 +32,12 @@ function InitCanvas(){
     });
     
     window.addEventListener("mousemove", function(e){
-        try {
-            if (dragging){
-                camera.position = camera.position.Sub(
-                    new Vector2(e.movementX / camera.zoom, -e.movementY / camera.zoom));
-            }
-        } catch{}
+        // try {
+        //     if (dragging){
+        //         camera.position = camera.position.Sub(
+        //             new Vector2(e.movementX / camera.zoom, -e.movementY / camera.zoom));
+        //     }
+        // } catch{}
     });
     
     window.addEventListener("click", function(e){
@@ -155,23 +158,6 @@ function GetChunkSizeXMultiple(number){
         return n;
     }
     return Math.floor(n / x) * world.chunkSizeX;
-}
-
-var playerPositionX = 8;
-function Tst_movePlayer(){
-    if (Input.left){
-        camera.position.x -= 0.2;
-    }
-    if (Input.right){
-        camera.position.x += 0.2;
-    }
-    if (Input.up){
-        camera.position.y += 0.2;
-    }
-    if (Input.down){
-        camera.position.y -= 0.2;
-    }
-    
 }
 
 window.oncontextmenu = function(){

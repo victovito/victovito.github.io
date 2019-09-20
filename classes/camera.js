@@ -1,6 +1,6 @@
 class Camera
 {
-    constructor(ctx, position = new Vector2(0, 105), zoom = 50){
+    constructor(ctx, position = new Vector2(0, 105), zoom = 55){
         this.ctx = ctx;
 
         this.position = position;
@@ -86,6 +86,19 @@ class Camera
         let screenPos = this.WorldPosToScreenPoint(chunk.position.ToVector2()).ToVector2Int();
         chunk.chunkCanvas.style.left = `${screenPos.x}px`;
         chunk.chunkCanvas.style.top = `${screenPos.y - this.WorldLengthToScreenLenght(world.chunkSizeY)}px`;
+    }
+
+    ResizeEntityCanvas(entity){
+        let x = this.WorldLengthToScreenLenght(entity.size.x);
+        let y = this.WorldLengthToScreenLenght(entity.size.y);
+        entity.entityCanvas.width = x;
+        entity.entityCanvas.height = y;
+    }
+
+    PostionEntityCanvas(entity){
+        let screenPos = this.WorldPosToScreenPoint(entity.position);
+        entity.entityCanvas.style.left = `${screenPos.x - this.WorldLengthToScreenLenght(entity.size.x / 2)}px`;
+        entity.entityCanvas.style.top = `${screenPos.y - this.WorldLengthToScreenLenght(entity.size.y)}px`;
     }
 
     DrawBackground(ctx) {

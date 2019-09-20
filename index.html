@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pixel World</title>
+    <link rel="icon" type="image/png" href="textures/grass.png">
     <script src="main.js"></script>
     <script src="classes/utils.js"></script>
+    <script src="classes/input.js"></script>
     <script src="content/blocks.js"></script>
     <script src="content/trees.js"></script>
     <script src="classes/simplex-noise.js"></script>
@@ -14,6 +17,7 @@
     <script src="classes/block.js"></script>
     <script src="classes/chunk.js"></script>
     <script src="classes/world.js"></script>
+    <script src="classes/player.js"></script>
     <img src="textures/luminosity0.png" id="luminosity0">
     <img src="textures/grass.png" id="grass">
     <img src="textures/grass_bg.png" id="grass_bg">
@@ -34,14 +38,30 @@
         img {
             display: none;
         }
-        #canvas {
+        canvas {
             position: absolute;
             z-index: 1;
         }
+        #info {
+            position: absolute;
+            bottom: 0%;
+            left: 5%;
+            z-index: 100;
+            text-align: center;
+        }
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
-    <title>PW</title>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="noselect" id="info"><p style="color: white;
+        font-family: 'Courier New', Courier, monospace;">Refresh to generate new worlds!</p></div>
 </body>
 </html>

@@ -11,31 +11,34 @@ var BLOCK = {
     LOG: 8,
     properties: {
         0: {name: "Air", texture: null, isTransparent: true,
-            passLightAmount: 12, emitLightAmount: 0},
+            passLightAmount: 14, emitLightAmount: 0, isSolid: false},
 
         1: {name: "Water", texture: "water", isTransparent: true,
-            passLightAmount: 8, emitLightAmount: 0},
+            passLightAmount: 12, emitLightAmount: 0, isSolid: false},
 
         2: {name: "Dirt", texture: "dirt", isTransparent: false,
-            passLightAmount: 0, emitLightAmount: 0, backGroundTexture: "dirt_bg"},
+            passLightAmount: 0, emitLightAmount: 0, backGroundTexture: "dirt_bg",
+            isSolid: true},
 
         3: {name: "Grass", texture: "grass", isTransparent: false,
-            passLightAmount: 0, emitLightAmount: 0, backGroundTexture: "grass_bg"},
+            passLightAmount: 0, emitLightAmount: 0, backGroundTexture: "grass_bg",
+            isSolid: true},
 
         4: {name: "Stone", texture: "stone", isTransparent: false,
-            passLightAmount: 0, emitLightAmount: 0, backGroundTexture: "stone_bg"},
+            passLightAmount: 0, emitLightAmount: 0, backGroundTexture: "stone_bg",
+            isSolid: true},
 
         5: {name: "Sand", texture: "sand", isTransparent: false,
-            passLightAmount: 0, emitLightAmount: 0},
+            passLightAmount: 0, emitLightAmount: 0, isSolid: true},
 
         6: {name: "Leaves", texture: "leaves", isTransparent: true,
-            passLightAmount: 6, emitLightAmount: 0},
+            passLightAmount: 10, emitLightAmount: 0, isSolid: true},
 
         7: {name: "Glowstone", texture: "glowstone", isTransparent: false,
-            passLightAmount: 0, emitLightAmount: 4},
+            passLightAmount: 0, emitLightAmount: 1, isSolid: true},
         
         8: {name: "Log", texture: "log", isTransparent: false,
-            passLightAmount: 0, emitLightAmount: 0},
+            passLightAmount: 0, emitLightAmount: 0, isSolid: true},
 
     }
 };

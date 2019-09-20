@@ -7,15 +7,6 @@ var blockSelected;
 var bg_canvas;
 var bg;
 
-var oito = 8;
-
-var Input = {
-    left: false,
-    right: false,
-    up: false,
-    down: false,
-};
-
 function Run(){
     bg_canvas = InitCanvas();
     bg = bg_canvas.getContext("2d");
@@ -24,55 +15,27 @@ function Run(){
     
     world = new World();
     camera = new Camera(bg);
-    blockSelected = 4;
-
+    
+    let randomXpos = Math.floor((Math.random() * 200) - 100) + 0.5;
+    world.GenerateRecursiveWorld(randomXpos, world.renderChunksDistance);
+    
+    new Player(new Vector2(randomXpos, world.chunks[0].GetTerrainHeight(randomXpos)));
+    
+    blockSelected = BLOCK.STONE;
+    
     Update();
-
+    
 }
+
 function Update(){
-    Tst_movePlayer();
-    world.GenerateRecursiveWorld(playerPositionX, world.renderChunksDistance);
-    world.RemoveFarChunks(playerPositionX);
+    world.GenerateRecursiveWorld(playerList[0].position.x, world.renderChunksDistance);
+    world.RemoveFarChunks(playerList[0].position.x);
+    UpdatePlayers();
     camera.Render(bg);
     playerPositionX = camera.position.x;
+    camera.position = playerList[0].position;
 
     window.requestAnimationFrame(Update);
-}
-
-function CreateInputs(
-    left = "a",
-    right = "d",
-    up = "w",
-    down = "s"
-){
-    window.addEventListener("keydown", function(e){
-        if (e.key == left){
-            Input.left = true;
-        }
-        if (e.key == right){
-            Input.right = true;
-        }
-        if (e.key == up){
-            Input.up = true;
-        }
-        if (e.key == down){
-            Input.down = true;
-        }
-    });
-    window.addEventListener("keyup", function(e){
-        if (e.key == left){
-            Input.left = false;
-        }
-        if (e.key == right){
-            Input.right = false;
-        }
-        if (e.key == up){
-            Input.up = false;
-        }
-        if (e.key == down){
-            Input.down = false;
-        }
-    });
 }
 
 window.onload = Run;

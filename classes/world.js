@@ -3,7 +3,7 @@ class World
 
     constructor(){
 
-        this.seed = "9401408390";
+        this.seed = World.RandomSeed();
         
         this.chunkSizeX = 4;
         this.chunkSizeY = 256;
@@ -11,8 +11,10 @@ class World
 
         this.seaLevel = 100;
 
+        this.gravity = 10;
+
         this.chunks = [];
-        this.xOffset = 42824;
+        this.xOffset = 95123;
         this.simplexNoise = new SimplexNoise(this.seed);
         this.perlinNoise;
 

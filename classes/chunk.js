@@ -38,7 +38,7 @@ class Chunk
                 let backgroundBlock = BLOCK.AIR;
                 if (y <= terrainHeight){
                     if (y == Math.floor(terrainHeight)){
-                        if (y >= 102){
+                        if (y >= world.seaLevel + 2){
                             type = BLOCK.GRASS;
                             backgroundBlock = BLOCK.GRASS;
                         } else {
@@ -67,7 +67,7 @@ class Chunk
                 this.blocks[x][y] = new Block(this, new Vector2Int(this.position.x + x, this.position.y + y), type, backgroundBlock);
             }
         }
-        this.PlaceTrees(trees);
+        this.PlaceTrees(trees, TREE.OAK);
         world.UpdateLight();
     }
 
@@ -104,14 +104,15 @@ class Chunk
         }
     }
 
-    PlaceTrees(treesArray){
+    PlaceTrees(treesArray, type){
         for (let tree of treesArray){
             let terrainHeight = Math.floor(this.GetTerrainHeight(tree));
             let relativePosition = new Vector2Int(tree - this.position.x, terrainHeight + 2);
-            let type = Math.ceil(((world.simplexNoise.noise2D(tree * 6.654, 0) + 1) / 2) * 2) - 1;
+            let randomTree = ((world.simplexNoise.noise2D(tree * 12.1346801, 0) + 1) / 2) * Object.keys(type).length;
+            randomTree = Math.floor(randomTree);
             try {
                 if (terrainHeight + 1 > world.seaLevel){
-                    this.PlaceTree(TREE.OAK[type], relativePosition);
+                    this.PlaceTree(type[randomTree], relativePosition);
                 }
             } catch{}
         }
@@ -128,7 +129,7 @@ class Chunk
             if (world.simplexNoise.noise2D(n * 2, 0) > 0.4){
                 let push = true;
                 for (let e of trees){
-                    if (n >= e && n <= e + 1){
+                    if (n >= e && n <= e + 2){
                         push = false;
                         break;
                     }
