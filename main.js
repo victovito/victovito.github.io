@@ -24,7 +24,7 @@ function Run(){
     
     world = new World();
     camera = new Camera(bg);
-    blockSelected = BLOCK.STONE;
+    blockSelected = 4;
 
     Update();
 
