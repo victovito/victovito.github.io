@@ -27,6 +27,8 @@ class Chunk
     }
 
     GenerateChunk(){
+        var trees = this.GetTreesPosition();
+        //console.log(trees);
         for (let x = 0; x < this.sizeX; x++){
             let terrainHeight = this.GetTerrainHeight(x + this.position.x);
             for (let y = 0; y < this.sizeY; y++){
@@ -50,21 +52,22 @@ class Chunk
                         type = BLOCK.STONE;
                         backgroundBlock = BLOCK.STONE;
                     }
-                } else if (y <= 100){
+                } else if (y <= world.seaLevel){
                     type = BLOCK.WATER;
                 } else {
                     type = BLOCK.AIR;
                 }
 
-                if (caveNoise > 0.35){
-                    if (type != BLOCK.WATER){
-                        type = BLOCK.AIR;
-                    }
-                }
+                // if (caveNoise){
+                //     if (type != BLOCK.WATER){
+                //         type = BLOCK.AIR;
+                //     }
+                // }
 
                 this.blocks[x][y] = new Block(this, new Vector2Int(this.position.x + x, this.position.y + y), type, backgroundBlock);
             }
         }
+        this.PlaceTrees(trees);
         world.UpdateLight();
     }
 
@@ -93,7 +96,83 @@ class Chunk
 
     CavesNoise(x, y){
         x += world.xOffset;
-        return Math.min(noise.perlin2(x / 15, y / 5), 0.4);
+        let value = Math.max(world.simplexNoise.noise2D(x / 15, y / 5)) - 0.3;
+        if (value > -0.5 && value < 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    PlaceTrees(treesArray){
+        for (let tree of treesArray){
+            let terrainHeight = Math.floor(this.GetTerrainHeight(tree));
+            let relativePosition = new Vector2Int(tree - this.position.x, terrainHeight + 2);
+            let type = Math.ceil(((world.simplexNoise.noise2D(tree * 6.654, 0) + 1) / 2) * 2) - 1;
+            try {
+                if (terrainHeight + 1 > world.seaLevel){
+                    this.PlaceTree(TREE.OAK[type], relativePosition);
+                }
+            } catch{}
+        }
+    }
+
+    GetTreesPosition(){
+
+        let trees = [];
+
+        let x1 = this.position.x - 10;
+        let x2 = this.position.x + world.chunkSizeX + 10;
+
+        for (let n = x1; n < x2; n++){
+            if (world.simplexNoise.noise2D(n * 2, 0) > 0.4){
+                let push = true;
+                for (let e of trees){
+                    if (n >= e && n <= e + 1){
+                        push = false;
+                        break;
+                    }
+                }
+                if (push){
+                    trees.push(n);
+                }
+            }
+        }
+        return trees;
+
+    }
+
+    PlaceTree(tree, relativePosition){
+        let pattern = tree.pattern;
+        let patternCenter = tree.center;
+        for (let x = relativePosition.x;
+                x < relativePosition.x + pattern[0].length; x++){
+            for (let y = relativePosition.y;
+                    y < relativePosition.y + pattern.length; y++){
+                let posX = x - patternCenter[1];
+                let posY = y + patternCenter[0] - pattern.length;
+                if (posX < 0 || posX > this.sizeX){
+                    continue;
+                }
+                if (posY < 0 || posY > this.sizeY){
+                    continue;
+                }
+
+                try {
+                    let currentBlock = this.blocks[posX][posY];
+                    if (currentBlock.type == BLOCK.AIR || currentBlock.type == BLOCK.LEAVES){
+                        let newType = pattern[pattern.length - 1 - (y - relativePosition.y)][x -relativePosition.x];
+                        if (newType != BLOCK.AIR){
+                            this.blocks[posX][posY].ChangeType(newType);
+                        }
+                    }
+                } catch{}
+            }
+        }
+    }
+
+    PlacePattern(pattern, relativePosition){
+        
     }
 
     BreakBlock(relativePosition){

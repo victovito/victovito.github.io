@@ -1,6 +1,6 @@
 class Camera
 {
-    constructor(ctx, position = new Vector2(0, 110), zoom = 50){
+    constructor(ctx, position = new Vector2(0, 105), zoom = 50){
         this.ctx = ctx;
 
         this.position = position;

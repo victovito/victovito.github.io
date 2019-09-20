@@ -3,15 +3,28 @@ class World
 
     constructor(){
 
+        this.seed = "9401408390";
+        
         this.chunkSizeX = 4;
         this.chunkSizeY = 256;
         this.renderChunksDistance = 7;
 
+        this.seaLevel = 100;
+
         this.chunks = [];
         this.xOffset = 42824;
-        this.simplexNoise = new SimplexNoise("123456");
+        this.simplexNoise = new SimplexNoise(this.seed);
         this.perlinNoise;
 
+    }
+
+    static RandomSeed(){
+        let seed = "";
+        for (let i = 0; i < 10; i++){
+            let newChar = [0,1,2,3,4,5,6,7,8,9][Math.floor(Math.random() * 10)];
+            seed = seed.toString() + newChar.toString();
+        }
+        return seed;
     }
 
     static GetChunkId(position){
