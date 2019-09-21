@@ -10,7 +10,7 @@ class Player
         this.health = 100;
         
         this.speed = 6;
-        this.jumpForce = 10;
+        this.jumpForce = 21;
 
         this.size = new Vector2(0.75, 1.6);
 
@@ -40,7 +40,7 @@ class Player
 
         if (this.inGround){
             if (Input.jump){
-                this.velocity.y = 0.15;
+                this.velocity.y = this.jumpForce / 100;
             }
         }
         this.position = this.position.Add(new Vector2(this.GetMoveAmountX(), this.GetMoveAmountY()));
@@ -155,7 +155,7 @@ class Player
 
     GravityForce(){
         if (!this.inGround){
-            this.velocity = this.velocity.Sub(new Vector2(0, world.gravity / 1000));
+            this.velocity = this.velocity.Sub(new Vector2(0, world.gravity / 10).Scale(deltaTime));
         }
     }
 

@@ -34,11 +34,14 @@ function Update(){
     deltaTime = (now - lastUpdate) / 1000;
     lastUpdate = now;
 
+    document.getElementById("coords").innerHTML = 
+    `x: ${playerList[0].position.x.toFixed(2)}</br>y: ${playerList[0].position.y.toFixed(2)}
+    </br>world seed: ${world.seed}`
+
     world.GenerateRecursiveWorld(playerList[0].position.x, world.renderChunksDistance);
     world.RemoveFarChunks(playerList[0].position.x);
     UpdatePlayers();
-    playerPositionX = camera.position.x;
-    camera.position = playerList[0].position;
+    camera.position = playerList[0].position.Add(new Vector2(0, playerList[0].size.y/2));
     camera.Render();
 
     window.requestAnimationFrame(Update);
