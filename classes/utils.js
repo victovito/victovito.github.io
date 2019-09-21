@@ -1,6 +1,5 @@
 
-function InitCanvas(){
-    var bg_canvas = document.getElementById("canvas");
+function InitGame(){
     
     window.addEventListener('resize', ResizeCanvas, false);
     
@@ -53,67 +52,65 @@ function InitCanvas(){
         let x = e.pageX;
         let y = e.pageY;
         let clickPos = camera.ScreenPointToWorldPos(new Vector2(x, y));
-        world.PlaceBlockAt(clickPos);
+        world.PlaceBlockAt(clickPos, blockSelected);
     });
     
     ResizeCanvas();
+}
     
-    return bg_canvas;
-    }
-    
-    function ResizeCanvas(){
-        // if (canvas){
-        //     canvas.width = window.innerWidth;
-        //     canvas.height = window.innerHeigh;
-        //     return;
-        // }
-        // let allCanvas = document.getElementsByTagName("canvas");
-        // for (let canvas of allCanvas){
-        //     canvas.width = window.innerWidth;
-        //     canvas.height = window.innerHeight;
-        // }
-        let bg_canvas = document.getElementById("canvas");
-        bg_canvas.width = window.innerWidth;
-        bg_canvas.height = window.innerHeight;
+function ResizeCanvas(){
+    // if (canvas){
+    //     canvas.width = window.innerWidth;
+    //     canvas.height = window.innerHeigh;
+    //     return;
+    // }
+    // let allCanvas = document.getElementsByTagName("canvas");
+    // for (let canvas of allCanvas){
+    //     canvas.width = window.innerWidth;
+    //     canvas.height = window.innerHeight;
+    // }
+    let bg_canvas = document.getElementById("background");
+    bg_canvas.width = window.innerWidth;
+    bg_canvas.height = window.innerHeight;
 
-        // try {
-        //     for (let c of world.chunks){
-        //         c.Draw();
-        //     }
-        // } catch {}
-    }
+    // try {
+    //     for (let c of world.chunks){
+    //         c.Draw();
+    //     }
+    // } catch {}
+}
 
-    function UpdateCanvas(canvas){
-        
-        let ctx = canvas.getContext("2d");
-        
-        ctx.resetTransform();
-        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-        World.DrawBackground(ctx);
-        
+function UpdateCanvas(canvas){
+    
+    let ctx = canvas.getContext("2d");
+    
+    ctx.resetTransform();
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    World.DrawBackground(ctx);
+    
+}
+    
+class Vector2Int
+{
+    constructor(x = 0, y = 0){
+        this.x = Math.floor(x);
+        this.y = Math.floor(y);
     }
     
-    class Vector2Int
-    {
-        constructor(x = 0, y = 0){
-            this.x = Math.floor(x);
-            this.y = Math.floor(y);
-        }
-        
-        ToVector2(){
-            return new Vector2(this.x, this.y);
-        }
-        
-        Add(vector){
-            return new Vector2(this.x + Math.floor(vector.x), this.y + Math.floor(vector.y));
-        }
-        
-        Sub(vector){
-            return new Vector2(this.x - Math.floor(vector.x), this.y - Math.floor(vector.y));
-        }
-        
-        Scale(factor){
-            return new Vector2(this.x * factor, this.y * factor);
+    ToVector2(){
+        return new Vector2(this.x, this.y);
+    }
+    
+    Add(vector){
+        return new Vector2(this.x + Math.floor(vector.x), this.y + Math.floor(vector.y));
+    }
+    
+    Sub(vector){
+        return new Vector2(this.x - Math.floor(vector.x), this.y - Math.floor(vector.y));
+    }
+    
+    Scale(factor){
+        return new Vector2(this.x * factor, this.y * factor);
     }
 
 }

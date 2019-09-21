@@ -1,7 +1,7 @@
 class Camera
 {
-    constructor(ctx, position = new Vector2(0, 105), zoom = 55){
-        this.ctx = ctx;
+    constructor(position = new Vector2(0, 105), zoom = 55){
+        this.bg_ctx = document.getElementById("background").getContext("2d");
 
         this.position = position;
         this.zoom = zoom;
@@ -10,7 +10,7 @@ class Camera
     }
 
     Render(){
-        this.DrawBackground(this.ctx);
+        this.DrawBackground(this.bg_ctx);
         world.DrawWorld();
     }
 
@@ -102,22 +102,22 @@ class Camera
     }
 
     DrawBackground(ctx) {
-        var sky = ctx.createLinearGradient(0, 0, 0, canvas.clientHeight);
+        var sky = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
         sky.addColorStop(0.6, "#CCDAF1");
         sky.addColorStop(0, "#70A1EC");
         ctx.fillStyle = sky;
-        ctx.fillRect(0,0, canvas.clientWidth, canvas.clientHeight);
+        ctx.fillRect(0,0, window.innerWidth, window.innerHeight);
     }
 
     WorldPosToScreenPoint(position){
         position = position.InvertY();
         return position.Sub(this.position.InvertY()).Scale(this.zoom)
-        .Add(new Vector2(canvas.clientWidth / 2, canvas.clientHeight / 2));
+        .Add(new Vector2(window.innerWidth / 2, window.innerHeight / 2));
     }
 
     ScreenPointToWorldPos(point){
         try {point = point.ToVector2();} catch{}
-        point = point.Sub(new Vector2(canvas.clientWidth / 2, canvas.clientHeight / 2));
+        point = point.Sub(new Vector2(window.innerWidth / 2, window.innerHeight / 2));
         return this.position.InvertY().Add(point.Scale(1/this.zoom)).InvertY();
     }
 

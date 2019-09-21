@@ -123,7 +123,7 @@ class World
         chunk.BreakBlock(new Vector2Int(x,y));
     }
 
-    PlaceBlockAt(position){
+    PlaceBlockAt(position, block){
         let chunkX = GetChunkSizeXMultiple(position.x);
         let chunkId = World.GetChunkId(new Vector2(chunkX, 0));
         if (!World.CheckForExistingChunks(chunkId)){
@@ -140,7 +140,7 @@ class World
             return;
         }
 
-        chunk.PlaceBlock(new Vector2Int(x,y), blockSelected);
+        chunk.PlaceBlock(new Vector2Int(x,y), block);
     }
 
     RefreshChunks(){
