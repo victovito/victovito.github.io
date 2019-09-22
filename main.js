@@ -12,7 +12,7 @@ var time = 0;
 function Run(){
     InitGame();
     
-    CreateInputs(left = "a", right = "d");
+    CreateInputs({});
     
     world = new World();
     camera = new Camera();
@@ -34,17 +34,24 @@ function Update(){
     deltaTime = (now - lastUpdate) / 1000;
     lastUpdate = now;
 
-    document.getElementById("coords").innerHTML = 
-    `x: ${playerList[0].position.x.toFixed(2)}</br>y: ${playerList[0].position.y.toFixed(2)}
-    </br>world seed: ${world.seed}`
+    ScreenInfo();
 
     world.GenerateRecursiveWorld(playerList[0].position.x, world.renderChunksDistance);
     world.RemoveFarChunks(playerList[0].position.x);
+    world.DoDayNightCycle();
     UpdatePlayers();
     camera.position = playerList[0].position.Add(new Vector2(0, playerList[0].size.y/2));
     camera.Render();
 
     window.requestAnimationFrame(Update);
+}
+
+function ScreenInfo(){
+    document.getElementById("coords").innerHTML = 
+    `x: ${playerList[0].position.x.toFixed(2)}</br>y: ${playerList[0].position.y.toFixed(2)}
+    </br>world seed: ${world.seed}`
+
+    document.getElementById("framerate").innerHTML = `${(1 / deltaTime).toFixed(0)}fps`;
 }
 
 window.onload = Run;

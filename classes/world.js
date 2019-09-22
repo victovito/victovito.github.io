@@ -13,11 +13,16 @@ class World
 
         this.gravity = 10;
 
+        this.dayTime = 8; //Value always beetwen 0 and 24
+        this.sunMoonBrightness = 0;
+        this.brightnessCycle = [0.1,0.1,0.1,0.5,1,1,1,1,1,1,0.1,0.1];
+        this.timePassSpeed = 0.04;
+
         this.chunks = [];
         this.xOffset = 95123;
         this.simplexNoise = new SimplexNoise(this.seed);
         this.perlinNoise;
-
+        
     }
 
     static RandomSeed(){
@@ -149,6 +154,29 @@ class World
         });
     }
 
+    DoDayNightCycle(){
+        if (Math.floor(time / 1000) - (time / 1000).toFixed(1) == 0){
+            console.log("doing");
+            this.UpdateLight();
+        }
+        this.dayTime += this.timePassSpeed * deltaTime;
+    }
+
+    GetBrightness(){
+        while (this.dayTime > 24){
+            this.dayTime -= 24;
+        }
+        let dayTimeInPercentage = this.dayTime / 24;
+        let brightnessIndex = Lerp(dayTimeInPercentage, 0, this.brightnessCycle.length);
+        let beetwenValuesPercentage = brightnessIndex - Math.floor(brightnessIndex);
+        brightnessIndex = Math.floor(brightnessIndex);
+        let brightness = Lerp(beetwenValuesPercentage,
+            this.brightnessCycle[brightnessIndex],
+            this.brightnessCycle[brightnessIndex + 1]);
+        
+        return brightness;
+    }
+
     CalculateDirectLight(chunk){
 
         chunk.blocks.forEach(c => {
@@ -157,14 +185,15 @@ class World
             });
         });
         
+        let brightness = this.GetBrightness();
         for (let x = 0; x < this.chunkSizeX; x++){
             let y = this.chunkSizeY - 1;
             while (true){
                 let block = chunk.blocks[x][y];
                 if (block.type == BLOCK.AIR){
-                    block.luminosity = 1;
+                    block.luminosity = brightness;
                 } else {
-                    block.luminosity = 1;
+                    block.luminosity = brightness;
                     break;
                 }
                 y -= 1;

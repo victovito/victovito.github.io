@@ -157,6 +157,10 @@ function GetChunkSizeXMultiple(number){
     return Math.floor(n / x) * world.chunkSizeX;
 }
 
+function Lerp(value, start, end){
+    return (1-value) * start + value * end;
+}
+
 window.oncontextmenu = function(){
     return false;
 }

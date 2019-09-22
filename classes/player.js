@@ -6,15 +6,15 @@ class Player
         this.id = `player_${playerList.indexOf(this) + 1}`;
         
         this.position = position
+        this.velocity = new Vector2();
 
         this.health = 100;
         
-        this.speed = 6;
+        this.speed = 7;
         this.jumpForce = 21;
 
         this.size = new Vector2(0.75, 1.6);
-
-        this.velocity = new Vector2();
+        this.maxVerticalVelocity = 2;
         this.inGround = false;
 
         this.entityCanvas = document.createElement("canvas");
@@ -157,6 +157,7 @@ class Player
         if (!this.inGround){
             this.velocity = this.velocity.Sub(new Vector2(0, world.gravity / 10).Scale(deltaTime));
         }
+        this.velocity.y = Math.max(Math.min(this.velocity.y, this.maxVerticalVelocity), -this.maxVerticalVelocity);
     }
 
     Draw(){

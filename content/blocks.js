@@ -11,10 +11,10 @@ var BLOCK = {
     LOG: 8,
     properties: {
         0: {name: "Air", texture: null, isTransparent: true,
-            passLightAmount: 14, emitLightAmount: 0, isSolid: false},
+            passLightAmount: 16, emitLightAmount: 0, isSolid: false},
 
         1: {name: "Water", texture: "water", isTransparent: true,
-            passLightAmount: 12, emitLightAmount: 0, isSolid: false},
+            passLightAmount: 14, emitLightAmount: 0, isSolid: false},
 
         2: {name: "Dirt", texture: "dirt", isTransparent: false,
             passLightAmount: 0, emitLightAmount: 0, backGroundTexture: "dirt_bg",

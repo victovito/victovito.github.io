@@ -7,13 +7,13 @@ var Input = {
     jump: false,
 };
 
-function CreateInputs(
+function CreateInputs({
     left = "a",
     right = "d",
     up = "w",
     down = "s",
-    jump = " "
-){
+    jump = " ",
+}){
     window.addEventListener("keydown", function(e){
         if (e.key == left){
             Input.left = true;

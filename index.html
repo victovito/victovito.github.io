@@ -40,21 +40,27 @@
         }
         canvas {
             position: absolute;
-            z-index: 1;
         }
         #info {
             position: absolute;
-            bottom: 0%;
+            bottom: 1%;
             left: 5%;
             z-index: 100;
             text-align: center;
         }
         #coords {
             position: absolute;
-            top: 0%;
+            top: 1%;
             right: 5%;
             z-index: 100;
             text-align: right;
+        }
+        #framerate {
+            position: absolute;
+            top: 1%;
+            left: 5%;
+            z-index: 100;
+            text-align: left;
         }
         .noselect {
             -webkit-touch-callout: none;
@@ -72,7 +78,9 @@
         <p  id="info" style="color: white;
         font-family: 'Courier New', Courier, monospace;">Refresh to generate new worlds!</p>
         <p id="coords" style="color: white;
-        font-family: 'Courier New', Courier, monospace;">x: 100</br>y: 120</p>
+        font-family: 'Courier New', Courier, monospace;"></p>
+        <p id="framerate" style="color: white;
+        font-family: 'Courier New', Courier, monospace;"></p>
     </div>
 </body>
 </html>
