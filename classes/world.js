@@ -16,7 +16,7 @@ class World
         this.dayTime = 8; //Value always beetwen 0 and 24
         this.sunMoonBrightness = 0;
         this.brightnessCycle = [0.1,0.1,0.1,0.5,1,1,1,1,1,1,0.1,0.1];
-        this.timePassSpeed = 0.04;
+        this.timePassSpeed = 0; //0.04;
 
         this.chunks = [];
         this.xOffset = 95123;
