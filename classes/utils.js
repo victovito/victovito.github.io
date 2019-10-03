@@ -164,3 +164,8 @@ function Lerp(value, start, end){
 window.oncontextmenu = function(){
     return false;
 }
+
+function Sum(a, b){
+    return a + b;
+}
+
