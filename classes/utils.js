@@ -1,166 +1,96 @@
-
-function InitGame(){
-    
-    window.addEventListener('resize', ResizeCanvas, false);
-    
-    window.addEventListener("wheel", function(e){
-        let deltaY = e.deltaY;
-        let amount = 1 + deltaY / -Math.abs(deltaY) / 15;
-        camera.zoom *= amount;
-        try {
-            for (let c of world.chunks){
-                camera.ResizeChunkCanvas(c.chunkCanvas);
-                c.RequestUpdate();
-            }
-            for (let p of playerList){
-                camera.ResizeEntityCanvas(p);
-            }
-        } catch {}
-    });
-    
-    window.addEventListener("mousedown", function(e){
-        if (e.which == 1){
-            dragging = true;
-        }
-    });
-    
-    window.addEventListener("mouseup", function(e){
-        if (e.which == 1){
-            dragging = false;
-        }
-    });
-    
-    window.addEventListener("mousemove", function(e){
-        // try {
-        //     if (dragging){
-        //         camera.position = camera.position.Sub(
-        //             new Vector2(e.movementX / camera.zoom, -e.movementY / camera.zoom));
-        //     }
-        // } catch{}
-    });
-    
-    window.addEventListener("click", function(e){
-        let x = e.pageX;
-        let y = e.pageY;
-        let clickPos = camera.ScreenPointToWorldPos(new Vector2(x, y));
-        if (e.which == 1){
-            world.RemoveBlockAt(clickPos);
-        }
-    });
-
-    window.addEventListener("contextmenu", function(e){
-        let x = e.pageX;
-        let y = e.pageY;
-        let clickPos = camera.ScreenPointToWorldPos(new Vector2(x, y));
-        world.PlaceBlockAt(clickPos, blockSelected);
-    });
-    
-    ResizeCanvas();
-}
-    
-function ResizeCanvas(){
-    // if (canvas){
-    //     canvas.width = window.innerWidth;
-    //     canvas.height = window.innerHeigh;
-    //     return;
-    // }
-    // let allCanvas = document.getElementsByTagName("canvas");
-    // for (let canvas of allCanvas){
-    //     canvas.width = window.innerWidth;
-    //     canvas.height = window.innerHeight;
-    // }
-    let bg_canvas = document.getElementById("background");
-    bg_canvas.width = window.innerWidth;
-    bg_canvas.height = window.innerHeight;
-
-    // try {
-    //     for (let c of world.chunks){
-    //         c.Draw();
-    //     }
-    // } catch {}
-}
-
-function UpdateCanvas(canvas){
-    
-    let ctx = canvas.getContext("2d");
-    
-    ctx.resetTransform();
-    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-    World.DrawBackground(ctx);
-    
-}
-    
-class Vector2Int
+class Utils
 {
-    constructor(x = 0, y = 0){
-        this.x = Math.floor(x);
-        this.y = Math.floor(y);
-    }
-    
-    ToVector2(){
-        return new Vector2(this.x, this.y);
-    }
-    
-    Add(vector){
-        return new Vector2(this.x + Math.floor(vector.x), this.y + Math.floor(vector.y));
-    }
-    
-    Sub(vector){
-        return new Vector2(this.x - Math.floor(vector.x), this.y - Math.floor(vector.y));
-    }
-    
-    Scale(factor){
-        return new Vector2(this.x * factor, this.y * factor);
+    /**
+     * A linear interpolator for hex colors.
+     *
+     * Based on:
+     * https://gist.github.com/rosszurowski/67f04465c424a9bc0dae
+     *
+     * @param {string} a  (hex color start val)
+     * @param {string} b  (hex color end val)
+     * @param {Number} amount  (the amount to fade from a to b)
+     *
+     * @example
+     * lerpColor("#000000", "#ffffff", 0.5);
+     * // returns "#7f7f7f"
+     *
+     * @returns {Number}
+     */
+    static lerpColor(a, b, amount) {
+
+        a = parseInt(a.replace("#", "0x"), 16);
+        b = parseInt(b.replace("#", "0x"), 16);
+
+        const ar = a >> 16,
+            ag = a >> 8 & 0xff,
+            ab = a & 0xff,
+
+            br = b >> 16,
+            bg = b >> 8 & 0xff,
+            bb = b & 0xff,
+
+            rr = ar + amount * (br - ar),
+            rg = ag + amount * (bg - ag),
+            rb = ab + amount * (bb - ab);
+
+        return "#" + ((rr << 16) + (rg << 8) + (rb | 0)).toString(16);
+    };
+
+    static hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? `rgb(` +
+          `${parseInt(result[1], 16)},` +
+          `${parseInt(result[2], 16)},` +
+          `${parseInt(result[3], 16)})` : null;
     }
 
-}
-
-class Vector2
-{
-    constructor(x = 0, y = 0){
-        this.x = x;
-        this.y = y;
+    static rgbToHex(r, g, b) {
+        function componentToHex(c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
     }
 
-    ToVector2Int(){
-        return new Vector2(Math.floor(this.x), Math.floor(this.y));
+    static clamp(value, min, max){
+        return Math.min(
+            max,
+            Math.max(
+                value, min
+            )
+        );
     }
 
-    Add(vector){
-        return new Vector2(this.x + vector.x, this.y + vector.y);
+    /**
+     * 
+     * @param {number} start 
+     * @param {number} end 
+     * @param {number} amount 
+     * 
+     * @example
+     * lerp(10, 30, 0.5);
+     * //returns 20
+     * 
+     * @returns {number}
+     */
+    static lerp(start, end, amount) {
+        return (1-amount)*start+amount*end;
     }
 
-    Sub(vector){
-        return new Vector2(this.x - vector.x, this.y - vector.y);
+    /**
+     * @param {string} str  (string)
+     *
+     * @example
+     * stringHash("Hello World!");
+     * // returns -969099747
+     *
+     * @returns {Number}
+     */
+    static stringHash(str){
+        let h;
+        for(let i = 0; i < str.length; i++){
+            h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+        }
+        return h;
     }
-
-    Scale(factor){
-        return new Vector2(this.x * factor, this.y * factor);
-    }
-
-    InvertY(){
-        return new Vector2(this.x, -this.y);
-    }
-
-    RoundValues(){
-        return new Vector2(Math.round(this.x), Math.round(this.y));
-    }
-
-}
-
-function GetChunkSizeXMultiple(number){
-    let n = Math.floor(number);
-    const x = world.chunkSizeX;
-    if (n % x == 0){
-        return n;
-    }
-    return Math.floor(n / x) * world.chunkSizeX;
-}
-
-function Lerp(value, start, end){
-    return (1-value) * start + value * end;
-}
-
-window.oncontextmenu = function(){
-    return false;
 }
