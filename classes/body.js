@@ -35,26 +35,13 @@ class Body
         /** @type {Vector2} */
         this.worldPosition = this.getWorldPos();
 
-    }
-
-    static generateProperties(type, rng){
-
-        if (type == Body.type.STAR){
-            const range = Object.keys(Body.type.STAR.classification.spectralTypes).reduce(
-                (a, b) => a + Body.type.STAR.classification.spectralTypes[b].rarity, 0
-            );
-            let value = rng() * range;
-            for (let c of Object.keys(Body.type.STAR.classification.spectralTypes)){
-                if (value < Body.type.STAR.classification.spectralTypes[c].rarity){
-                    return type.getProperties(
-                        Body.type.STAR.classification.spectralTypes[c],
-                        rng
-                    );
-                }
-                value -= Body.type.STAR.classification.spectralTypes[c].rarity;
-            }
-        }
-
+        // if (
+        //     this.properties.spectralType == Body.type.STAR.classification.spectralTypes.V
+        // ){
+        //     Controller.selectedBody = this;
+        //     console.log(this);
+        // }
+        
     }
     
     /** @type {void} */ 
@@ -128,60 +115,70 @@ class Body
                     }
                 },
                 spectralTypes: {
+                    V: {
+                        name: "V-type (this is an easter egg)",
+                        color: "#f5fff9",
+                        temperature: { min: 40000, max: 100000 },
+                        rarity: 0.01
+                    },
                     O: {
                         name: "O-type",
                         color: "#66ccff",
                         temperature: { min: 25000, max: 40000 },
-                        rarity: 1
+                        rarity: 3
                     },
                     B: {
                         name: "B-type",
                         color: "#a6e0f8",
                         temperature: { min: 10000, max: 25000 },
-                        rarity: 3
+                        rarity: 7
                     },
                     A: {
                         name: "A-type",
                         color: "#f0f7fd",
                         temperature: { min: 7500, max: 10000 },
-                        rarity: 5
+                        rarity: 10
                     },
                     F: {
                         name: "F-type",
                         color: "#fffcd6",
                         temperature: { min: 6000, max: 7500 },
-                        rarity: 10
+                        rarity: 15
                     },
                     G: {
                         name: "G-type",
                         color: "#ffed84",
                         temperature: { min: 5000, max: 6000 },
-                        rarity: 15
+                        rarity: 20
                     },
                     K: {
                         name: "K-type",
                         color: "#f9a76f",
                         temperature: { min: 3500, max: 5000 },
-                        rarity: 20
+                        rarity: 30
                     },
                     M: {
                         name: "M-type",
                         color: "#e34424",
-                        temperature: { min: 500, max: 3500 },
-                        rarity: 40
+                        temperature: { min: 1000, max: 3500 },
+                        rarity: 50
                     },
                 }
             },
-            /** @returns {object} */
-            getProperties: function(spectralType, rng){
+            /** @returns {Object} */
+            generateProperties: function(rng){
                 const properties = {
-                    spectralType: spectralType,
+                    spectralType: null,
                     radius: null,
                     mass: null,
                     temperature: null,
                     luminosity: null,
                     color: "#ffffff"
                 };
+
+                properties.spectralType = Utils.choseFromObjectWithRarity(
+                    Body.type.STAR.classification.spectralTypes
+                );
 
                 properties.temperature = Utils.lerp(
                     properties.spectralType.temperature.min,

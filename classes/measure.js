@@ -26,7 +26,7 @@ class Measure
                 value: 696340,
                 name: "Solar radiuses",
                 uname: "Solar radius",
-                symbol: "R☉"
+                symbol: "R\u2299"
             },
             LS: {
                 value: 299792,
@@ -82,7 +82,7 @@ class Measure
                 value: 1.98847e30,
                 name: "Solar masses",
                 uname: "Solar mass",
-                symbol: "M☉"
+                symbol: "M\u2299"
             },
         }
     }
@@ -110,7 +110,7 @@ class Measure
                 value: 1,
                 name: "Solar luminosities",
                 uname: "Solar luminosity",
-                symbol: "L☉"
+                symbol: "L\u2299"
             }
         }
     }

@@ -16,8 +16,11 @@ class Chunk
         /** @type {Body[]} */
         this.bodies = [];
 
-        this.minAmount = 150;
-        this.maxAmount = 250;
+        this.minSysAmount = 75;
+        this.maxSysAmount = 150;
+
+        this.minBodyAmount = 5;
+        this.maxBodyAmount = 20;
 
         this.generateChunk();
     }
@@ -30,16 +33,41 @@ class Chunk
     /** @type {void} */
     generateChunk(){
         const rng = new Math.seedrandom(this.seed);
-        const systemCount = Math.ceil(rng() * (this.maxAmount - this.minAmount) + this.minAmount);
+        const systemCount = Math.ceil(Utils.lerp(this.minSysAmount, this.maxSysAmount, rng()));
+        const bodyCount = Math.ceil(Utils.lerp(this.minBodyAmount, this.maxBodyAmount, rng()));
 
         for (let i = 0; i < systemCount; i++){
-            let position = new Vector2(rng(), rng());
+            const position = new Vector2(rng(), rng());
             
             const system = new StarSystem(
                 this, i, "Untitled Star System", position
             );
 
             this.systems.push(system);
+        }
+
+        for (let i = 0; i < bodyCount; i++){
+            const position = new Vector2(rng(), rng());
+            const type = Utils.choseFromObject(Body.type);
+
+            let properties;
+            if (type == Body.type.STAR){
+                properties = Body.type.STAR.generateProperties(rng);
+            } else {
+                properties = {
+                    radius: 3 * Measure.length.Er,
+                    mass: 1,
+                    luminosity: 0,
+                    color: "#7f7f7f"
+                }
+            }
+
+            const body = new Body(
+                this, position, "Unnamed Body",
+                type, properties, null
+            );
+
+            this.bodies.push(body);
         }
 
     }

@@ -50,7 +50,7 @@ class StarSystem
             this.position,
             "Unnamed Star",
             Body.type.STAR,
-            Body.generateProperties(Body.type.STAR, rng),
+            Body.type.STAR.generateProperties(rng),
             null
         );
         // body.color = "#" + rng().toString(16).slice(2, 8);

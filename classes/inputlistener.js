@@ -8,6 +8,8 @@ class InputListener
     static mouseStopTimer;
 
     static scrollOffset = 0;
+    static lastScroll = 0;
+    static lastScrollMousePos = Vector2.zero;
 
     static mouse1 = false;
     static mouse2 = false;
@@ -71,7 +73,9 @@ class InputListener
         })
 
         document.addEventListener("wheel", function(e){
-            InputListener.scrollOffset = e.wheelDeltaY > 0 ? 1 : -1
+            InputListener.scrollOffset = e.wheelDeltaY > 0 ? 1 : -1;
+            InputListener.lastScroll = Date.now();
+            InputListener.lastScrollMousePos = InputListener.mousePosition;
         })
 
         document.addEventListener("keydown", function(e){

@@ -14,14 +14,15 @@ class Hud
 
         this.properties = {
             drawSystemLabelDist: 750000000000,
-            font: "sans-serif"
+            font: "sans-serif",
+            screenMargin: 20,
         }
 
         /** @type {Body[]} */
         this.labelsToDraw = [];
 
         this.scaleMarker = {
-            maxLenght: window.innerWidth / 4,
+            maxLenght: 250,
             currentScale: null,
             currentMeasure: null,
             currentValue: null,
@@ -73,6 +74,10 @@ class Hud
 
     drawLabel(/** @type {Body} */ body){
 
+        if (!body){
+            return;
+        }
+
         const screenPoint = this.camera.worldPosToScreenPoint(body.worldPosition);
         const screenLenght = this.camera.worldLengthToScreenLength(body.properties.radius);
 
@@ -101,13 +106,78 @@ class Hud
         this.ctx.fillText(body.type.name, screenPoint.x, screenPoint.y + screenLenght + 25);
     }
 
-    drawLabels(){
-        // for (let body of this.labelsToDraw){
-        //     this.drawLabel(body);
-        // }
-        if (Controller.selectedBody){
-            this.drawLabel(Controller.selectedBody);
+    drawInfo(/** @type {Body} */ body){
+
+        if (!body){
+            return;
         }
+
+        const screenPos = new Vector2(
+            this.properties.screenMargin,
+            this.properties.screenMargin
+        );
+
+        const infoToDraw = [
+            ``,
+            `Spectral type: ${body.properties.spectralType?.name}`,
+            `Suface temperature: ${
+                Math.round(body.properties.temperature).toLocaleString()
+            } ${Measure.temperature.units.K.symbol}`,
+            `Luminosity: ${
+                (body.properties.luminosity).toLocaleString(
+                    "en-US", { 
+                        minimumIntegerDigits: 1,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 8,
+                    }
+                )
+            } ${Measure.luminosity.units.SL.symbol}`,
+            `Radius: ${
+                (body.properties.radius).toLocaleString(
+                    "en-US", { 
+                        minimumIntegerDigits: 1,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                    }
+                )
+            } ${Measure.length.units.KM.symbol} (${
+                Math.round((body.properties.radius / Measure.length.Sr) * 10e2) / 10e2
+            } ${Measure.length.units.SR.symbol})`,
+            `Mass: ${Math.round(body.properties.mass)} ${Measure.mass.units.KG.symbol} (${
+                body.properties.mass / Measure.mass.Sm
+            } ${Measure.mass.units.SM.symbol})`,
+            ``,
+            `Aparent size: ${this.camera.worldLengthToScreenLength(body.properties.radius)}`,
+            `Distance to screen center: ${
+                Math.max(
+                    body.worldPosition.distanceTo(this.camera.position) - body.properties.radius,
+                    0
+                ).toLocaleString(
+                    "en-US", { 
+                        minimumIntegerDigits: 1,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                    }
+                )
+            } ${Measure.length.units.KM.symbol}`
+        ];
+
+        const lineHeight = 12;
+
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "top";
+        
+        this.ctx.fillStyle = "white";
+        this.ctx.font = `12px ${this.properties.font}`;
+        this.ctx.fillText(`${body.name}`, screenPos.x, screenPos.y);
+        this.ctx.fillStyle = "gray";
+        this.ctx.fillText(`${body.type.name}`, screenPos.x, screenPos.y + lineHeight);
+        
+        this.ctx.font = `10px ${this.properties.font}`;
+        for (let i = 0; i < infoToDraw.length; i++){
+            this.ctx.fillText(infoToDraw[i], screenPos.x, screenPos.y + lineHeight * (i + 2));
+        }
+
     }
 
     updateScaleMarker(){
@@ -157,7 +227,10 @@ class Hud
 
         const lineWidth = 5;
         
-        const screenPos = new Vector2(window.innerWidth - 12, window.innerHeight - 12);
+        const screenPos = new Vector2(
+            window.innerWidth - this.properties.screenMargin,
+            window.innerHeight - this.properties.screenMargin
+        );
         
         const size = this.camera.worldLengthToScreenLength(
             this.scaleMarker.currentValue * this.scaleMarker.currentMeasure.measure.value *
@@ -216,21 +289,17 @@ class Hud
             }`, screenPos.x, screenPos.y
         );
         
-        // console.log(
-        //     `${this.scaleMarker.currentScale / (this.scaleMarker.currentMeasure.measure.value *
-        //         this.scaleMarker.currentMeasure.multiplier)} : ${
-        //         this.scaleMarker.currentValue
-        //     } ${
-        //         this.scaleMarker.currentMeasure.prefix.length > 0 ?
-        //         this.scaleMarker.currentMeasure.prefix + " " : ""
-        //     }${
-        //         this.scaleMarker.currentMeasure.measure.name
-        //     }`
-        // );
-        // console.log(
-        //     this.scaleMarker.currentScale / this.scaleMarker.currentMeasure.measure.value *
-        //     this.scaleMarker.currentMeasure.multiplier < 100
-        // );
+        if (InputListener.mouse3){
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = "rgb(255,255,255,0.1)";
+            this.ctx.lineWidth = 2;
+            this.ctx.arc(window.innerWidth / 2, window.innerHeight / 2,
+                size / 2,
+                0, 7
+            );
+            this.ctx.stroke();
+        }
+
     }
 
     draw(){
@@ -238,7 +307,8 @@ class Hud
         this.canvas.clear();
         
         this.drawScaleMarker();
-        this.drawLabels();
+        this.drawLabel(Controller.selectedBody);
+        this.drawInfo(Controller.selectedBody);
         
         this.labelsToDraw = [];
     }

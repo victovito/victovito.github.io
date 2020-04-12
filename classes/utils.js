@@ -77,6 +77,54 @@ class Utils
         return (1-amount)*start+amount*end;
     }
 
+    static formatNumber(number){
+        return number.toString().replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    /**
+     * @param {Object} object (object with "rarity" property inside it's child objects)
+     * @param {any} rng (random number generator (optional))
+     * 
+     * @example
+     * choseFromObjectWithRarity({
+     *    object1: { rarity: 1 },
+     *    object2: { rarity: 10 },
+     *    object3: { rarity: 50 }
+     * })
+     * //More likely to return object3
+     * 
+     * @returns {Object}
+     */
+    static choseFromObjectWithRarity(object, rng = null){
+        if (!rng){
+            rng = Math.random;
+        }
+        const range = Object.keys(object).reduce(
+            (a, b) => a + object[b].rarity, 0
+        );
+        let value = rng() * range;
+        for (let c of Object.keys(object)){
+            if (value < object[c].rarity){
+                return object[c];
+            }
+            value -= object[c].rarity;
+        }
+    }
+
+    /**
+     * @param {Object} object (object)
+     * @param {any} rng (random number generator (optional))
+     * 
+     * @returns {Object}
+     */
+    static choseFromObject(object, rng = null){
+        if (!rng){
+            rng = Math.random;
+        }
+        const keys = Object.keys(object);
+        return object[keys[Math.floor(rng() * keys.length)]];
+    }
+
     /**
      * @param {string} str  (string)
      *

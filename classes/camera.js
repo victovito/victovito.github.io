@@ -135,6 +135,37 @@ class Camera
         if (body.type == Body.type.STAR){
             this.drawStar(body);
         }
+        switch (body.type) {
+            case Body.type.STAR:
+                this.drawStar(body);
+                break;
+        
+            default:
+                this.drawGeneric(body);
+                break;
+        }
+    }
+
+    drawGeneric(body){
+        const bodyRadius = this.worldLengthToScreenLength(body.properties.radius);
+        const bodyPos = this.worldPosToScreenPoint(body.worldPosition);
+        const onScreen = this.isOnScreen(
+            body.worldPosition,
+            bodyRadius
+        );
+
+        if (!onScreen){
+            return;
+        }
+
+        if (bodyRadius < this.properties.bodies.minMagnitudeToDraw){
+            return;
+        }
+
+        this.ctx.beginPath();
+        this.ctx.fillStyle = body.properties.color;
+        this.ctx.arc(bodyPos.x, bodyPos.y, bodyRadius, 0, 7);
+        this.ctx.fill();
     }
 
     drawStar(/** @type {Body} */ body){
@@ -150,11 +181,6 @@ class Camera
         }
 
         {this.seenBodies.push(body);}
-
-        if (this.size < this.hud.properties.drawSystemLabelDist
-        ){
-            this.hud.enqueueLabel(body);
-        }
         
         const brightRadius = bodyRadius + this.worldLengthToScreenLength(
             body.properties.luminosity * body.properties.radius
@@ -206,11 +232,13 @@ class Camera
         this.ctx.arc(
             bodyPos.x, bodyPos.y,
             Math.max(
-                Utils.lerp(
-                    0, 0.75,
-                    Utils.clamp(body.properties.luminosity / (this.size / 1e10), 0.075, 0.75)
+                Math.min(
+                    Utils.lerp(
+                        0, 0.75,
+                        Utils.clamp(body.properties.luminosity / (this.size / 1e10), 0.075, 0.75)
+                    )
                 ),
-                bodyRadius
+                bodyRadius,
             ),
             0, 7
         );
@@ -245,11 +273,29 @@ class Camera
             this.ctx.lineTo(chunkCorner0.x, chunkCorner0.y);
             this.ctx.lineWidth = 1;
             this.ctx.strokeStyle = "white";
-            if (this.properties.chunkDebugMode){
-                this.ctx.fillStyle = "#ff000022";
-                this.ctx.fill();
-            }
             this.ctx.stroke();
+        }
+        if (this.properties.chunkDebugMode){
+            const chunkCorner0 = this.worldPosToScreenPoint(
+                chunk.position.add(Vector2.zero).scale(this.world.properties.chunkSize)
+            );
+            const chunkCorner1 = this.worldPosToScreenPoint(
+                chunk.position.add(Vector2.right).scale(this.world.properties.chunkSize)
+            );
+            const chunkCorner2 = this.worldPosToScreenPoint(
+                chunk.position.add(Vector2.one).scale(this.world.properties.chunkSize)
+            );
+            const chunkCorner3 = this.worldPosToScreenPoint(
+                chunk.position.add(Vector2.up).scale(this.world.properties.chunkSize)
+            );
+            this.ctx.beginPath();
+            this.ctx.moveTo(chunkCorner0.x, chunkCorner0.y);
+            this.ctx.lineTo(chunkCorner1.x, chunkCorner1.y);
+            this.ctx.lineTo(chunkCorner2.x, chunkCorner2.y);
+            this.ctx.lineTo(chunkCorner3.x, chunkCorner3.y);
+            this.ctx.lineTo(chunkCorner0.x, chunkCorner0.y);
+            this.ctx.fillStyle = "#ff000022";
+            this.ctx.fill();
         }
     }
 

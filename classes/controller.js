@@ -35,7 +35,7 @@ class Controller
                     camera.screenPointToWorldPos(
                         InputListener.mousePosition.invertY()
                     ),
-                    InputListener.scrollOffset / 9
+                    Math.max(0, InputListener.scrollOffset / 9)
                 );
             }
         } else {
@@ -58,7 +58,6 @@ class Controller
 
         if (InputListener.mouse1click){
             this.selectedBody = camera.getBodyByScreenPoint(InputListener.mousePosition);
-            console.log(this.selectedBody);
         }
     }
 }
