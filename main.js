@@ -1,71 +1,57 @@
-/** @type {Camera} */
-let camera;
-/** @type {Hud} */
-let hud;
-/** @type {World} */
-let world;
 
-const urlParams = new URLSearchParams(window.location.search);
+var world;
+var camera;
 
-function start(){
-    console.log("Started");
+var blockSelected;
+
+var deltaTime = 0;
+var lastUpdate = Date.now();
+var start = Date.now();
+var time = 0;
+
+function Run(){
+    InitGame();
     
-    hud = new Hud(
-        new Canvas(document.getElementById("hudCanvas"))
-    );
-    camera = new Camera(
-        new Canvas(document.getElementById("mainCanvas")), hud
-    );
-    world = new World(camera, urlParams.get("seed"));
-
-    camera.position = new Vector2(
-        world.properties.chunkSize, world.properties.chunkSize
-    ).scale(0.5);
+    CreateInputs({});
     
-    InputListener.addListeners();
-
-    requestAnimationFrame(update);
+    world = new World();
+    camera = new Camera();
+    
+    let randomXpos = Math.floor((Math.random() * 200) - 100) + 0.5;
+    world.GenerateRecursiveWorld(randomXpos, world.renderChunksDistance);
+    
+    new Player(new Vector2(randomXpos, world.chunks[0].GetTerrainHeight(randomXpos)));
+    
+    blockSelected = BLOCK.STONE;
+    
+    Update();
+    
 }
 
-function update(){
+function Update(){
+    time = Date.now() - start;
+    let now = Date.now();
+    deltaTime = (now - lastUpdate) / 1000;
+    lastUpdate = now;
 
-    Time.update();
-    
-    Controller.controllCamera(camera);
-    
-    world.manageChunks();
-    
-    camera.draw();
-    hud.draw();
+    ScreenInfo();
 
-    InputListener.resetPerFrameInputs();
-    requestAnimationFrame(update);
+    world.GenerateRecursiveWorld(playerList[0].position.x, world.renderChunksDistance);
+    world.RemoveFarChunks(playerList[0].position.x);
+    world.DoDayNightCycle();
+    UpdatePlayers();
+    camera.position = playerList[0].position.Add(new Vector2(0, playerList[0].size.y/2));
+    camera.Render();
+
+    window.requestAnimationFrame(Update);
 }
 
-// function easterEggLOL(){
-//     if (world.stringSeed == "lucas"){
-//         const rng = new Math.seedrandom("lucas");
-        
-//         const properties = Body.type.STAR.getProperties(
-//             Body.type.STAR.classification.spectralTypes.G, rng
-//         );
-//         properties.radius = (rng() * 1500 + 1500) * Measure.length.Sr * 100000;
-//         properties.temperature = rng() * 10000 + 10000;
-//         properties.luminosity = Body.type.STAR.classification.getLuminosity(
-//             properties.radius, properties.temperature
-//         );
+function ScreenInfo(){
+    document.getElementById("coords").innerHTML = 
+    `x: ${playerList[0].position.x.toFixed(2)}</br>y: ${playerList[0].position.y.toFixed(2)}
+    </br>world seed: ${world.seed}`
 
-//         const body = new Body(
-//             world.loadedChunks[0],
-//             new Vector2(rng(), rng()),
-//             "Lucas",
-//             Body.type.STAR,
-//             properties,
-//             null
-//         );
+    document.getElementById("framerate").innerHTML = `${(1 / deltaTime).toFixed(0)}fps`;
+}
 
-//         world.loadedChunks[0].bodies.push(body);
-//         Controller.selectedBody = body;
-//         camera.position = body.worldPosition;
-//     }
-// }
+window.onload = Run;

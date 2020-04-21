@@ -1,37 +1,86 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>2dUniverse</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pixel World</title>
+    <link rel="icon" type="image/png" href="textures/grass.png">
+    <script src="main.js"></script>
+    <script src="classes/utils.js"></script>
+    <script src="classes/input.js"></script>
+    <script src="content/blocks.js"></script>
+    <script src="content/trees.js"></script>
+    <script src="classes/simplex-noise.js"></script>
+    <script src="classes/perlin-noise.js"></script>
+    <script src="classes/camera.js"></script>
+    <script src="classes/block.js"></script>
+    <script src="classes/chunk.js"></script>
+    <script src="classes/world.js"></script>
+    <script src="classes/player.js"></script>
+    <img src="textures/luminosity0.png" id="luminosity0">
+    <img src="textures/grass.png" id="grass">
+    <img src="textures/grass_bg.png" id="grass_bg">
+    <img src="textures/dirt.png" id="dirt">
+    <img src="textures/dirt_bg.png" id="dirt_bg">
+    <img src="textures/sand.png" id="sand">
+    <img src="textures/stone.png" id="stone">
+    <img src="textures/stone_bg.png" id="stone_bg">
+    <img src="textures/water.png" id="water">
+    <img src="textures/leaves.png" id="leaves">
+    <img src="textures/glowstone.png" id="glowstone">
+    <img src="textures/log.png" id="log">
     <style>
         html, body {
             margin: 0px;
             overflow: hidden;
         }
-
-        .canvas {
+        img {
+            display: none;
+        }
+        canvas {
             position: absolute;
         }
+        #info {
+            position: absolute;
+            bottom: 1%;
+            left: 5%;
+            z-index: 100;
+            text-align: center;
+        }
+        #coords {
+            position: absolute;
+            top: 1%;
+            right: 5%;
+            z-index: 100;
+            text-align: right;
+        }
+        #framerate {
+            position: absolute;
+            top: 1%;
+            left: 5%;
+            z-index: 100;
+            text-align: left;
+        }
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
-    <link rel="icon" href="icon.png">
-    <script src="classes/measure.js"></script>
-    <script src="classes/utils.js"></script>
-    <script src="classes/body.js"></script>
-    <script src="classes/star.js"></script>
-    <script src="classes/planet.js"></script>
-    <script src="classes/starsystem.js"></script>
-    <script src="classes/canvas.js"></script>
-    <script src="classes/world.js"></script>
-    <script src="classes/chunk.js"></script>
-    <script src="classes/vector2.js"></script>
-    <script src="classes/camera.js"></script>
-    <script src="classes/inputlistener.js"></script>
-    <script src="classes/controller.js"></script>
-    <script src="classes/hud.js"></script>
-    <script src="classes/seedrandom.js"></script>
-    <script src="classes/time.js"></script>
-    <script src="main.js"></script>
 </head>
-<body onload="start()">
-    <canvas class="canvas" id="hudCanvas"></canvas>
-    <canvas class="canvas" id="mainCanvas"></canvas>
+<body>
+    <canvas id="background"></canvas>
+    <div class="noselect">
+        <p  id="info" style="color: white;
+        font-family: 'Courier New', Courier, monospace;">Refresh to generate new worlds!</p>
+        <p id="coords" style="color: white;
+        font-family: 'Courier New', Courier, monospace;"></p>
+        <p id="framerate" style="color: white;
+        font-family: 'Courier New', Courier, monospace;"></p>
+    </div>
 </body>
 </html>
