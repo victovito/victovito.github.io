@@ -45,7 +45,7 @@ class StarSystem
     generateStarSystem(){
         const rng = new Math.seedrandom(this.seed);
 
-        const body = new Body(
+        const star = new Star(
             this.chunk,
             this.position,
             "Unnamed Star",
@@ -54,8 +54,8 @@ class StarSystem
             null
         );
         // body.color = "#" + rng().toString(16).slice(2, 8);
-        body.color = "#ffffff";
-        this.stars.push(body);
+        star.color = "#ffffff";
+        this.stars.push(star);
     }
 
 }

@@ -72,6 +72,30 @@ class Hud
         this.labelsToDraw.push(body);
     }
 
+    drawName(body){
+        const screenPoint = this.camera.worldPosToScreenPoint(body.worldPosition);
+        const screenLenght = this.camera.worldLengthToScreenLength(body.properties.radius);
+
+        this.ctx.beginPath();
+        this.ctx.fillStyle = "white";
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "middle";
+        this.ctx.font = `10px ${this.properties.font}`;
+        this.ctx.fillText(body.name, screenPoint.x + screenLenght + 5, screenPoint.y);
+    }
+
+    drawSeenNames(){
+        for (let body of this.camera.seenBodies){
+            if (body == Controller.selectedBody){
+                continue;
+            }
+            if (!(body instanceof Planet)){
+                continue;
+            }
+            this.drawName(body);
+        }
+    }
+
     drawLabel(/** @type {Body} */ body){
 
         if (!body){
@@ -117,21 +141,8 @@ class Hud
             this.properties.screenMargin
         );
 
-        const infoToDraw = [
+        const genericInfo = [
             ``,
-            `Spectral type: ${body.properties.spectralType?.name}`,
-            `Suface temperature: ${
-                Math.round(body.properties.temperature).toLocaleString()
-            } ${Measure.temperature.units.K.symbol}`,
-            `Luminosity: ${
-                (body.properties.luminosity).toLocaleString(
-                    "en-US", { 
-                        minimumIntegerDigits: 1,
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 8,
-                    }
-                )
-            } ${Measure.luminosity.units.SL.symbol}`,
             `Radius: ${
                 (body.properties.radius).toLocaleString(
                     "en-US", { 
@@ -143,14 +154,39 @@ class Hud
             } ${Measure.length.units.KM.symbol} (${
                 Math.round((body.properties.radius / Measure.length.Sr) * 10e2) / 10e2
             } ${Measure.length.units.SR.symbol})`,
-            `Mass: ${Math.round(body.properties.mass)} ${Measure.mass.units.KG.symbol} (${
-                body.properties.mass / Measure.mass.Sm
-            } ${Measure.mass.units.SM.symbol})`,
+            `Mass: ${
+                body.properties.mass
+            } ${Measure.mass.units.KG.symbol} (${
+                (body.properties.mass / Measure.mass.Sm).toLocaleString(
+                    "en-US", { 
+                        minimumIntegerDigits: 1,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                    }
+                )
+            } ${Measure.mass.units.SM.symbol})`
+        ];
+
+        let infoToDraw;
+        switch (body.type) {
+            case Body.type.STAR:
+                infoToDraw = this.getStarInfo(body);
+                break;
+            default:
+                infoToDraw = [];
+                break;
+        }
+
+        const additionalInfo = [
+            ``,
+            `Child bodies: ${body.childCount}`,
             ``,
             `Aparent size: ${this.camera.worldLengthToScreenLength(body.properties.radius)}`,
-            `Distance to screen center: ${
+            `Distance to object: ${
                 Math.max(
-                    body.worldPosition.distanceTo(this.camera.position) - body.properties.radius,
+                    body.worldPosition.distanceTo(
+                        this.camera.screenPointToWorldPos(InputListener.mousePosition.invertY())
+                    ) - body.properties.radius,
                     0
                 ).toLocaleString(
                     "en-US", { 
@@ -174,10 +210,30 @@ class Hud
         this.ctx.fillText(`${body.type.name}`, screenPos.x, screenPos.y + lineHeight);
         
         this.ctx.font = `10px ${this.properties.font}`;
-        for (let i = 0; i < infoToDraw.length; i++){
-            this.ctx.fillText(infoToDraw[i], screenPos.x, screenPos.y + lineHeight * (i + 2));
+        const allInfo = infoToDraw.concat(genericInfo, additionalInfo);
+        for (let i = 0; i < allInfo.length; i++){
+            this.ctx.fillText(allInfo[i], screenPos.x, screenPos.y + lineHeight * (i + 2));
         }
 
+    }
+
+    getStarInfo(star){
+        return [
+            ``,
+            `Spectral type: ${star.properties.spectralType?.name}`,
+            `Suface temperature: ${
+                Math.round(star.properties.temperature).toLocaleString()
+            } ${Measure.temperature.units.K.symbol}`,
+            `Luminosity: ${
+                (star.properties.luminosity).toLocaleString(
+                    "en-US", { 
+                        minimumIntegerDigits: 1,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 8,
+                    }
+                )
+            } ${Measure.luminosity.units.SL.symbol}`
+        ];
     }
 
     updateScaleMarker(){
@@ -309,6 +365,7 @@ class Hud
         this.drawScaleMarker();
         this.drawLabel(Controller.selectedBody);
         this.drawInfo(Controller.selectedBody);
+        this.drawSeenNames();
         
         this.labelsToDraw = [];
     }

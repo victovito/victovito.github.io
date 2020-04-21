@@ -32,7 +32,7 @@ class Camera
             drawChunkBorder: false,
             chunkDebugMode: false,
             bodies: {
-                minMagnitudeToDraw: 0.1,
+                minMagnitudeToDraw: 0.05,
                 starBrightTransparency: 0.15
             }
         }
@@ -168,24 +168,26 @@ class Camera
         this.ctx.fill();
     }
 
-    drawStar(/** @type {Body} */ body){
-        const bodyRadius = this.worldLengthToScreenLength(body.properties.radius);
-        const bodyPos = this.worldPosToScreenPoint(body.worldPosition);
+    drawStar(/** @type {Star} */ star){
+        const bodyRadius = this.worldLengthToScreenLength(star.properties.radius);
+        const bodyPos = this.worldPosToScreenPoint(star.worldPosition);
         const onScreen = this.isOnScreen(
-            body.worldPosition,
+            star.worldPosition,
             bodyRadius
         );
+        
+        star.drawChildrens();
 
         if (!onScreen){
             return;
         }
 
-        {this.seenBodies.push(body);}
+        {this.seenBodies.push(star);}
         
         const brightRadius = bodyRadius + this.worldLengthToScreenLength(
-            body.properties.luminosity * body.properties.radius
-            + ((Math.sin(Date.now() / 1000) + 1) / 2) * (body.properties.radius / 5) *
-            Math.min(1, body.properties.luminosity * 100)
+            star.properties.luminosity * star.properties.radius
+            + ((Math.sin(Time.elapsedTime / 1000) + 1) / 2) * (star.properties.radius / 5) *
+            Math.min(1, star.properties.luminosity * 100)
         );
         if (brightRadius > this.properties.bodies.minMagnitudeToDraw) {
             const transp = Math.min(
@@ -199,7 +201,7 @@ class Camera
             const grd = this.ctx.createRadialGradient(
                 bodyPos.x, bodyPos.y, bodyRadius, bodyPos.x, bodyPos.y, brightRadius
             );
-            const color = Utils.hexToRgb(body.properties.color);
+            const color = Utils.hexToRgb(star.properties.color);
             grd.addColorStop(
                 0, color.replace(
                     ")", `, ${transp})`
@@ -216,39 +218,73 @@ class Camera
                 )
             )
             this.ctx.fillStyle = grd;
-            this.ctx.arc(
-                bodyPos.x, bodyPos.y,
-                Math.min(brightRadius, window.innerWidth * 10), 0, 7
-            );
-            // this.ctx.fillRect(
-            //     0, 0, window.innerWidth, window.innerHeight
+            // this.ctx.arc(
+            //     bodyPos.x, bodyPos.y,
+            //     Math.min(brightRadius, window.innerWidth * 10), 0, 7
             // );
+            this.ctx.fillRect(
+                0, 0, window.innerWidth, window.innerHeight
+            );
             this.ctx.fill();
         }
         
         this.ctx.beginPath();
         this.ctx.fillStyle = bodyRadius < this.properties.bodies.minMagnitudeToDraw ? 
-            "white" : body.properties.color;
+            "white" : star.properties.color;
         this.ctx.arc(
             bodyPos.x, bodyPos.y,
             Math.max(
-                Math.min(
-                    Utils.lerp(
-                        0, 0.75,
-                        Utils.clamp(body.properties.luminosity / (this.size / 1e10), 0.075, 0.75)
-                    )
+                Utils.lerp(
+                    0, 0.75,
+                    Utils.clamp(star.properties.luminosity / (this.size / 1e10), 0.075, 0.75)
                 ),
-                bodyRadius,
+                this.properties.bodies.minMagnitudeToDraw,
+                bodyRadius
             ),
             0, 7
         );
+        this.ctx.fill();
+
+    }
+
+    drawPlanet(planet){
+        const bodyRadius = this.worldLengthToScreenLength(planet.properties.radius);
+        const bodyPos = this.worldPosToScreenPoint(planet.worldPosition);
+        const starPos = this.worldPosToScreenPoint(planet.parentBody.object.worldPosition);
+        const onScreen = this.isOnScreen(
+            planet.worldPosition,
+            bodyRadius
+        );
+
+        {this.seenBodies.push(planet);}
+
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = `rgb(255, 255, 255, 0.25)`;
+        this.ctx.lineWidth = 1;
+        this.ctx.arc(
+            starPos.x, starPos.y,
+            this.worldLengthToScreenLength(planet.parentBody.distanceTo)
+            , 0, 7
+        );
+        this.ctx.stroke();
+
+        if (!onScreen){
+            return;
+        }
+
+        if (bodyRadius < this.properties.bodies.minMagnitudeToDraw){
+            return;
+        }
+
+        this.ctx.beginPath();
+        this.ctx.fillStyle = planet.properties.color;
+        this.ctx.arc(bodyPos.x, bodyPos.y, bodyRadius, 0, 7);
         this.ctx.fill();
     }
 
     /** @type {void} */
     drawChunk(/** @type {Chunk} */ chunk){
-
-        chunk.drawSystems();
+        
         chunk.drawBodies();
 
 
@@ -309,6 +345,10 @@ class Camera
 
         for (let chunk of this.world.loadedChunks){
             this.drawChunk(chunk);
+        }
+
+        if (Controller.selectedBody){
+            Controller.selectedBody.updateOrbit();
         }
     }
 }

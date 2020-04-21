@@ -28,6 +28,8 @@ function start(){
 }
 
 function update(){
+
+    Time.update();
     
     Controller.controllCamera(camera);
     

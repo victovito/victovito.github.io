@@ -28,16 +28,18 @@ class Controller
         
         if (!InputListener.mouse3){
             const multiplier = 1 - InputListener.scrollOffset / 10;
-            camera.applyZoom(multiplier);
             if (InputListener.scrollOffset != 0){
-                camera.position = Vector2.lerp(
-                    camera.position,
-                    camera.screenPointToWorldPos(
-                        InputListener.mousePosition.invertY()
-                    ),
-                    Math.max(0, InputListener.scrollOffset / 9)
-                );
+                if (camera.size < camera.properties.maxSize){
+                    camera.position = Vector2.lerp(
+                        camera.position,
+                        camera.screenPointToWorldPos(
+                            InputListener.mousePosition.invertY()
+                        ),
+                        InputListener.scrollOffset / 10
+                    );
+                }
             }
+            camera.applyZoom(multiplier);
         } else {
             camera.applyZoom(1 - InputListener.mouseOffset.y / 100)
         }

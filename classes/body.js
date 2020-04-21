@@ -1,54 +1,5 @@
 class Body
 {
-    constructor(
-        /** @type {Chunk} */ chunk,
-        /** @type {Vector2} */ position,
-        /** @type {string} */ name,
-        /** @type {Body.type} */ type,
-        /** @type {object} */ properties,
-        /** @type {Body} */ parentBody
-    ){
-        
-        /** @type {Chunk} */
-        this.chunk = chunk;
-
-        /** @type {string} */ 
-        this.name = name;
-        
-        /** @type {Body} */
-        this.parentBody = parentBody;
-
-        this.type = type;
-
-        this.properties = properties;
-        // this.properties = {
-        //     classification,
-        //     radius,
-        //     mass,
-        //     temperature,
-        //     luminosity,
-        //     color
-        // };
-        
-        /** @type {Vector2} */
-        this.position = position;
-        /** @type {Vector2} */
-        this.worldPosition = this.getWorldPos();
-
-        // if (
-        //     this.properties.spectralType == Body.type.STAR.classification.spectralTypes.V
-        // ){
-        //     Controller.selectedBody = this;
-        //     console.log(this);
-        // }
-        
-    }
-    
-    /** @type {void} */ 
-    getWorldPos(){
-        return this.chunk.position.add(this.position).scale(this.chunk.world.properties.chunkSize);
-    }
-
     static type = {
         GENERIC: {
             name: "Generic",
@@ -64,7 +15,23 @@ class Body
         },
         PLANET: {
             name: "Planet",
-            index: 3
+            index: 3,
+            classification: {
+                distances: {
+                    0: {
+                        min: 0.25 * Measure.length.AU, max: 2 * Measure.length.AU,
+                        rarity: 30
+                    },
+                    1: {
+                        min: 2 * Measure.length.AU, max: 15 * Measure.length.AU,
+                        rarity: 30
+                    },
+                    2: {
+                        min: 15 * Measure.length.AU, max: 40 * Measure.length.AU,
+                        rarity: 30
+                    },
+                }
+            }
         },
         STAR: {
             name: "Star",
@@ -95,23 +62,23 @@ class Body
                 radiuses: {
                     0: {
                         min: 0.1 * Measure.length.Sr, max: 0.7 * Measure.length.Sr,
-                        rarity: 30
+                        rarity: 50
                     },
                     1: {
-                        min: 0.7 * Measure.length.Sr, max: 3 * Measure.length.Sr,
+                        min: 0.7 * Measure.length.Sr, max: 2 * Measure.length.Sr,
                         rarity: 30
                     },
                     2: {
-                        min: 3 * Measure.length.Sr, max: 60 * Measure.length.Sr,
-                        rarity: 10
+                        min: 2 * Measure.length.Sr, max: 60 * Measure.length.Sr,
+                        rarity: 7
                     },
                     3: {
                         min: 60 * Measure.length.Sr, max: 1500 * Measure.length.Sr,
-                        rarity: 5
+                        rarity: 3
                     },
                     4: {
                         min: 1500 * Measure.length.Sr, max: 3000 * Measure.length.Sr,
-                        rarity: 0.1
+                        rarity: 0.01
                     }
                 },
                 spectralTypes: {
@@ -119,84 +86,59 @@ class Body
                         name: "V-type (this is an easter egg)",
                         color: "#f5fff9",
                         temperature: { min: 40000, max: 100000 },
+                        mass: { min: 1, max: 2 },
                         rarity: 0.01
                     },
                     O: {
                         name: "O-type",
                         color: "#66ccff",
                         temperature: { min: 25000, max: 40000 },
-                        rarity: 3
+                        mass: { min: 6.6 * Measure.mass.Sm, max: 15 * Measure.mass.Sm },
+                        rarity: 2
                     },
                     B: {
                         name: "B-type",
                         color: "#a6e0f8",
                         temperature: { min: 10000, max: 25000 },
-                        rarity: 7
+                        mass: { min: 1.8 * Measure.mass.Sm, max: 6.6 * Measure.mass.Sm },
+                        rarity: 5
                     },
                     A: {
                         name: "A-type",
                         color: "#f0f7fd",
                         temperature: { min: 7500, max: 10000 },
-                        rarity: 10
+                        mass: { min: 1.4 * Measure.mass.Sm, max: 2.2 * Measure.mass.Sm },
+                        rarity: 8
                     },
                     F: {
                         name: "F-type",
                         color: "#fffcd6",
                         temperature: { min: 6000, max: 7500 },
+                        mass: { min: 1.15 * Measure.mass.Sm, max: 1.4 * Measure.mass.Sm },
                         rarity: 15
                     },
                     G: {
                         name: "G-type",
                         color: "#ffed84",
                         temperature: { min: 5000, max: 6000 },
+                        mass: { min: 0.9 * Measure.mass.Sm, max: 1.15 * Measure.mass.Sm },
                         rarity: 20
                     },
                     K: {
                         name: "K-type",
                         color: "#f9a76f",
                         temperature: { min: 3500, max: 5000 },
+                        mass: { min: 0.45 * Measure.mass.Sm, max: 0.9 * Measure.mass.Sm },
                         rarity: 30
                     },
                     M: {
                         name: "M-type",
                         color: "#e34424",
-                        temperature: { min: 1000, max: 3500 },
+                        temperature: { min: 2500, max: 3500 },
+                        mass: { min: 0.08 * Measure.mass.Sm, max: 0.45 * Measure.mass.Sm },
                         rarity: 50
                     },
                 }
-            },
-            /** @returns {Object} */
-            generateProperties: function(rng){
-                const properties = {
-                    spectralType: null,
-                    radius: null,
-                    mass: null,
-                    temperature: null,
-                    luminosity: null,
-                    color: "#ffffff"
-                };
-
-                properties.spectralType = Utils.choseFromObjectWithRarity(
-                    Body.type.STAR.classification.spectralTypes
-                );
-
-                properties.temperature = Utils.lerp(
-                    properties.spectralType.temperature.min,
-                    properties.spectralType.temperature.max,
-                    rng()
-                );
-
-                properties.radius = Body.type.STAR.classification.getRadius(rng);
-
-                properties.mass = 1;
-                    
-                properties.luminosity = Body.type.STAR.classification.getLuminosity(
-                    properties.radius, properties.temperature
-                );
-                
-                properties.color = properties.spectralType.color;
-
-                return properties;
             }
         },
         BLACKHOLE: {
