@@ -2,85 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pixel World</title>
-    <link rel="icon" type="image/png" href="textures/grass.png">
-    <script src="main.js"></script>
-    <script src="classes/utils.js"></script>
-    <script src="classes/input.js"></script>
-    <script src="content/blocks.js"></script>
-    <script src="content/trees.js"></script>
-    <script src="classes/simplex-noise.js"></script>
-    <script src="classes/perlin-noise.js"></script>
-    <script src="classes/camera.js"></script>
-    <script src="classes/block.js"></script>
-    <script src="classes/chunk.js"></script>
-    <script src="classes/world.js"></script>
-    <script src="classes/player.js"></script>
-    <img src="textures/luminosity0.png" id="luminosity0">
-    <img src="textures/grass.png" id="grass">
-    <img src="textures/grass_bg.png" id="grass_bg">
-    <img src="textures/dirt.png" id="dirt">
-    <img src="textures/dirt_bg.png" id="dirt_bg">
-    <img src="textures/sand.png" id="sand">
-    <img src="textures/stone.png" id="stone">
-    <img src="textures/stone_bg.png" id="stone_bg">
-    <img src="textures/water.png" id="water">
-    <img src="textures/leaves.png" id="leaves">
-    <img src="textures/glowstone.png" id="glowstone">
-    <img src="textures/log.png" id="log">
-    <style>
-        html, body {
-            margin: 0px;
-            overflow: hidden;
-        }
-        img {
-            display: none;
-        }
-        canvas {
-            position: absolute;
-        }
-        #info {
-            position: absolute;
-            bottom: 1%;
-            left: 5%;
-            z-index: 100;
-            text-align: center;
-        }
-        #coords {
-            position: absolute;
-            top: 1%;
-            right: 5%;
-            z-index: 100;
-            text-align: right;
-        }
-        #framerate {
-            position: absolute;
-            top: 1%;
-            left: 5%;
-            z-index: 100;
-            text-align: left;
-        }
-        .noselect {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-    </style>
+
+    <link rel="stylesheet" href="main.css">
+
+    <link rel="icon" href="favicon.png">
+
+    <title>Meus Projetos</title>
 </head>
-<body>
-    <canvas id="background"></canvas>
-    <div class="noselect">
-        <p  id="info" style="color: white;
-        font-family: 'Courier New', Courier, monospace;">Refresh to generate new worlds!</p>
-        <p id="coords" style="color: white;
-        font-family: 'Courier New', Courier, monospace;"></p>
-        <p id="framerate" style="color: white;
-        font-family: 'Courier New', Courier, monospace;"></p>
-    </div>
+<body onload="start()">
+    <section class="header">
+        <div class="maindiv">
+            <div>
+                <div>
+                    <h2><a>meus projetos</a></h2>
+                    <h3>victor silva da rosa</h3>
+                </div>
+            </div>
+            <div class="info">
+                <p>Todos os projetos possuem o ícone <a style="font-weight: bolder;">?</a> em algum canto superior da tela.<br>Posicione o mouse sobre ele para informações adicionais sobre o projeto.</p>
+            </div>
+        </div>
+    </section>
+    <section class="projects">
+        <template>
+            <section class="project">
+                <div id="div">
+                    <h2 id="title"></h2>
+                    <p id="description"></p>
+                    <table class="info">
+                        <tr>
+                            <th><h6 id="language"></h6></th>
+                        </tr>
+                        <tr>
+                            <th><h6 id="date"></h6></th>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </template>
+        <script src="main.js"></script>
+    </section>
+    <section class="footer">
+    </section>
 </body>
 </html>

@@ -1,0 +1,42 @@
+[
+    {
+        "title": "Game of Life",
+        "description": "Este jogo, Game of Life, é um jogo proposto por um matemático britânico e é bem conhecido. Como proposto pelo próprio matemático, este jogo se passa em um grid infinito de células, em que cada célula possui um conjunto de regras que são aplicadas a cada geração. Porém alguns aplicativos que simulam o Game of Life possuem um grid finito. Este projeto começou quando achei que seria interessante tentar criar, por conta própria, um grid infinito onde cada célula seguia as regras do jogo. Foi neste projeto onde botei em prática pela primeira vez o uso de um algorítmo chamado de Quad Tree, o que otimizou muito o tempo dos cálculos. Além disso, passei grande parte do trabalho a ser feito em cada geração para um shader em WebGL, o que permitiu ainda mais complexidade. Tecnicamente, o resultado final não é um grid infinito, mas sim um grid de (2<sup>64</sup> x 2<sup>64</sup>)<sup>2</sup> pixels (algo entorno de 3.4 x 10<sup>38</sup> pixels), o que é grande o suficiente para que seja praticamente impossível que alguém consiga ficar sem espaço.",
+        "language": "Inglês",
+        "date": "Março 2021",
+        "img": "./images/gameoflife.png",
+        "url": "https://gameoflife-byvito.herokuapp.com"
+    },
+    {
+        "title": "Torre de Hanoi",
+        "description": "A Torre de Hanói é um quebra-cabeça. É um desafio simples e com regras simples, porém pode ser muito difícil de ser resolvido para quem não conhece toda a teoria por trás dele. Este projeto é bem pequeno e apenas aplica as regras do jogo para que seja possível jogá-lo. Eu também implementei um algorítmo que resolve qualquer sistema deste quebra cabeça. Esta aplicação foi criada para ser usado em um trabalho da minha faculdade.",
+        "language": "Português",
+        "date": "Fevereiro 2021",
+        "img": "./images/towerofhanoi.png",
+        "url": "https://towerofhanoi-victor.herokuapp.com"
+    },
+    {
+        "title": "Mandelbrot Set",
+        "description": "O Mandelbrot Set é um fractal descoberto pela primeira vez pelo matemático francês Pierre Fatou, mas recebe esse nome em homenagem ao professor Benoît Mandelbrot, que foi o primeiro a utilizar um computador para desenhá-lo. Este projeto foi o meu primeiro contato com shaders. O programa todo (com exceção dos controler e da GUI) é computado por um único shader. Há uma grande limitação, porém, devido a quantidade de mémoria que os floats são capazes de guardar. Como o conjunto de Mandelbrot é um fractal, ele é matemáticamente infinito, sendo matemáticamente possível dar zoom infinitamente em qualquer lugar. Porém o meu programa usa uma implementação bem simples da fórmula do conjunto. Isso significa que há um certo ponto em que os números simplesmente não possuem mais bytes para armazenar informação e o fractal perde totalmente a sua precisão. Mesmo assim é interessante explorar e ver a complexidade que apenas uma fórmula foi capaz de criar.",
+        "language": "Inglês",
+        "date": "Maio 2020",
+        "img": "./images/mandelbrotset.png",
+        "url": "https://mandelbrot-byvito.herokuapp.com"
+    },
+    {
+        "title": "Pixel World",
+        "description": "Este projeto começou como um desafio que propuz a mim mesmo. Havia pouco tempo que eu comecei a entender o funcionamente de noises e algumas de suas aplicações. Portante decidi que eu faria um 'jogo' no qual o terreno é gerado proceduralmente por noises. O visual foi fortemente inspirado pelo jogo Minecraft, que também usa a geração procedural para gerar seus terrenos. Além da geração procedural, foi implementado um algorítmo recursivo que calcula a quantidade de luz que cada 'bloco' recebe em tempo real (isso é mais perceptível quando se cava um buraco para baixo da terra). Eu tinha algumas ideias interessante para adionar neste projeto, mas devido a forma como a renderização funciona, é praticamente impossível adicioná-las. A única solução seria reescrever o jogo do zero e deixar todo o trabalho de renderização para o WebGL, o que talvez se torne um projeto no futuro.",
+        "language": "Inglês",
+        "date": "Setembro 2019",
+        "img": "./images/pixelworld.png",
+        "url": "https://pixelworld-byvito.herokuapp.com"
+    },
+    {
+        "title": "Campo Magnético",
+        "description": "Esta é uma aplicação que simula o campo magnético com qualquer quantidade de cargas, e ainda possui algumas ferramentas que ajudam a visualizá-lo. Esta foi a segunda aplicação interativa que eu criei usando HTML e JavaScript nativo. O espaço da simulação é bem limitado, o que é algo que eu provavelmente faria diferente atualmente. Quase um ano depois de ter feito a aplicação, eu resolvi atualizá-la e adicionar um vizualização do campo magnético que utilizava um fragment shader. Este foi um projeto bem simples, mas me ajudou muito com o entendimento de classes e objetos, que foram noções importantes para mim na programação.",
+        "language": "Português",
+        "date": "Agosto 2019",
+        "img": "./images/magneticfield.png",
+        "url": "https://magneticfield-byvito.herokuapp.com"
+    }
+]

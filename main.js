@@ -1,57 +1,34 @@
 
-var world;
-var camera;
+const start = function(){
+    loadProjects();
+};
 
-var blockSelected;
-
-var deltaTime = 0;
-var lastUpdate = Date.now();
-var start = Date.now();
-var time = 0;
-
-function Run(){
-    InitGame();
-    
-    CreateInputs({});
-    
-    world = new World();
-    camera = new Camera();
-    
-    let randomXpos = Math.floor((Math.random() * 200) - 100) + 0.5;
-    world.GenerateRecursiveWorld(randomXpos, world.renderChunksDistance);
-    
-    new Player(new Vector2(randomXpos, world.chunks[0].GetTerrainHeight(randomXpos)));
-    
-    blockSelected = BLOCK.STONE;
-    
-    Update();
-    
+function loadProjects(){
+    const req = new XMLHttpRequest();
+    req.open("get", "./projects.json");
+    req.onload = (err) => {
+        if (req.status != 200){
+            console.error(err);
+            return;
+        }
+        createProjectsButtons(JSON.parse(req.response));
+    };
+    req.send();
 }
 
-function Update(){
-    time = Date.now() - start;
-    let now = Date.now();
-    deltaTime = (now - lastUpdate) / 1000;
-    lastUpdate = now;
+function createProjectsButtons(projects){
+    const template = document.getElementsByTagName("template")[0];
 
-    ScreenInfo();
+    for (let item of projects){
+        const elem = template.content.cloneNode(true);
+        elem.querySelector("section").style.backgroundImage = `url(${item.img})`;
+        elem.querySelector("h2").innerHTML = item.title;
+        elem.querySelector("p").innerHTML = item.description;
+        elem.getElementById("language").innerHTML = item.language;
+        elem.getElementById("date").innerHTML = item.date;
+        elem.querySelector("div").onclick = function(){ window.open(item.url) };
 
-    world.GenerateRecursiveWorld(playerList[0].position.x, world.renderChunksDistance);
-    world.RemoveFarChunks(playerList[0].position.x);
-    world.DoDayNightCycle();
-    UpdatePlayers();
-    camera.position = playerList[0].position.Add(new Vector2(0, playerList[0].size.y/2));
-    camera.Render();
+        document.getElementsByClassName("projects")[0].append(elem);
+    }
 
-    window.requestAnimationFrame(Update);
 }
-
-function ScreenInfo(){
-    document.getElementById("coords").innerHTML = 
-    `x: ${playerList[0].position.x.toFixed(2)}</br>y: ${playerList[0].position.y.toFixed(2)}
-    </br>world seed: ${world.seed}`
-
-    document.getElementById("framerate").innerHTML = `${(1 / deltaTime).toFixed(0)}fps`;
-}
-
-window.onload = Run;
