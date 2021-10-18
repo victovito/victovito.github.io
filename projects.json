@@ -1,5 +1,13 @@
 [
     {
+        "title": "Dijkstra",
+        "description": "Esta é uma aplicação onde é possível visualizar o algoritmo chamado de Algoritmo de Dijkstra em um grafo ponderado. O algoritmo monta uma árvore, que possui uma nodo de origem, de menores caminhos até todos os nodos. Depois que a árvore é montada, é possível encontrar facilmente o caminho mais curto de qualquer outro nodo até a raiz. Como as arestas que ligam os nodos possuem pesos, os caminhos mais curtos são os caminhos que possuem o menor peso somado das arestas por onde passam. Na aplicação é possível ver a execução do algoritmo a partir de qualquer nodo em tempo real pois o algoritmo roda em um tipo de função chamada coroutine, que consegue suspender sua execução e ser resumida mais tarde, tornando possível que seja execudato aos poucos ao longo de multiplos quadros. <br><br>Este projeto foi criado em conjunto com <a href='https://github.com/Hoff22' target='_blank'>Arthur Hoff</a>.",
+        "language": "Inglês",
+        "date": "Outubro 2021",
+        "img": "./images/dijkstra.png",
+        "url": "https://interactivegraph-byvito.herokuapp.com"
+    },
+    {
         "title": "Game of Life",
         "description": "Este jogo, Game of Life, é um jogo proposto por um matemático britânico e é bem conhecido. Como proposto pelo próprio matemático, este jogo se passa em um grid infinito de células, em que cada célula possui um conjunto de regras que são aplicadas a cada geração. Porém alguns aplicativos que simulam o Game of Life possuem um grid finito. Este projeto começou quando achei que seria interessante tentar criar, por conta própria, um grid infinito onde cada célula seguia as regras do jogo. Foi neste projeto onde botei em prática pela primeira vez o uso de um algorítmo chamado de Quad Tree, o que otimizou muito o tempo dos cálculos. Além disso, passei grande parte do trabalho a ser feito em cada geração para um shader em WebGL, o que permitiu ainda mais complexidade. Tecnicamente, o resultado final não é um grid infinito, mas sim um grid de (2<sup>64</sup> x 2<sup>64</sup>)<sup>2</sup> pixels (algo entorno de 3.4 x 10<sup>38</sup> pixels), o que é grande o suficiente para que seja praticamente impossível que alguém consiga ficar sem espaço.",
         "language": "Inglês",

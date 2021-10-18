@@ -26,7 +26,7 @@ function createProjectsButtons(projects){
         elem.querySelector("p").innerHTML = item.description;
         elem.getElementById("language").innerHTML = item.language;
         elem.getElementById("date").innerHTML = item.date;
-        elem.querySelector("div").onclick = function(){ window.open(item.url) };
+        elem.querySelector("div").onclick = (e) => { if (e.target.tagName.toLowerCase() !== "a") window.open(item.url) };
 
         document.getElementsByClassName("projects")[0].append(elem);
     }
